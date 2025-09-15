@@ -2,12 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const mesesPCI = document.getElementById("mesesPCI");
   const inflacionesContainer = document.getElementById("inflacionesContainer");
   const calcularBtn = document.getElementById("calcularBtn");
-  const resultadoDiv = document.getElementById("resultado");
   const detalleCalculoDiv = document.getElementById("detalleCalculo");
-  const verCalculoBtn = document.getElementById("verCalculoBtn");
   const imagenBtn = document.getElementById("imagenBtn");
   const whatsappBtn = document.getElementById("whatsappBtn");
   const resultadoCard = document.getElementById("resultadoCard");
+  const nombreInquilino = document.getElementById("inquilinoNombre");
+  const mesInicial = document.getElementById("mesInicial");
+  const anioInicial = document.getElementById("anioInicial");
+  const mesFinal = document.getElementById("mesFinal");
+  const anioFinal = document.getElementById("anioFinal");
 
   // Generar inputs dinámicos
   mesesPCI.addEventListener("change", () => {
@@ -52,18 +55,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const depositoNuevo = alquilerNuevo * factorDeposito;
     const diferenciaDeposito = depositoNuevo - depositoActual;
 
-    // Mostrar resultado
-    resultadoDiv.classList.remove("d-none");
-    resultadoDiv.innerHTML = `
-          <strong>Alquiler actual:</strong> $${alquilerActual.toFixed(2)}<br>
-          <strong>Depósito actual:</strong> $${depositoActual.toFixed(2)}<br>
-          <hr>
-          <strong>Alquiler nuevo:</strong> $${alquilerNuevo.toFixed(2)}<br>
-          <strong>Depósito nuevo:</strong> $${depositoNuevo.toFixed(2)}<br>
-          <strong>Diferencia de depósito:</strong> $${diferenciaDeposito.toFixed(
-            2
-          )}
-        `;
+    // Meses y años seleccionados
+    const mesIni = parseInt(mesInicial.value);
+    const anioIni = parseInt(anioInicial.value);
+    const mesFin = parseInt(mesFinal.value);
+    const anioFin = parseInt(anioFinal.value);
+
+    // Nombres de meses
+    const mesesNombres = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+
+    // Generar detalle de IPC con mes/año
+    let ipcDetalle = "";
+    let mesActual = mesIni;
+    let anioActual = anioIni;
+    inflaciones.forEach((pci, idx) => {
+      ipcDetalle += `<li>${mesesNombres[mesActual - 1]} ${anioActual}: <strong>${pci}%</strong></li>`;
+      mesActual++;
+      if (mesActual > 12) {
+        mesActual = 1;
+        anioActual++;
+      }
+    });
 
     // Fórmula estilo producto
     let formula = `${alquilerActual.toFixed(2)}`;
@@ -75,36 +90,47 @@ document.addEventListener("DOMContentLoaded", () => {
     // Detalle
     detalleCalculoDiv.innerHTML = `
           <h6 class="fw-bold">Detalle del cálculo</h6>
+          <strong>Nombre:</strong> ${nombreInquilino.value}<br>
+          <strong>Período:</strong> ${mesesNombres[mesIni - 1]} ${anioIni} a ${mesesNombres[mesFin - 1]} ${anioFin}<br>
+          <ul>${ipcDetalle}</ul>
           <p>${formula}</p>
-          <p>Depósito actual: $${depositoActual.toFixed(2)}</p>
-          <p>Depósito nuevo: $${depositoNuevo.toFixed(2)}</p>
-          <p><strong>Diferencia:</strong> $${diferenciaDeposito.toFixed(2)}</p>
+          <hr>
+          <p><strong>Alquiler actual:</strong> $${alquilerActual.toFixed(2)}</p>
+          <p><strong>Alquiler nuevo:</strong> $${alquilerNuevo.toFixed(2)}</p>
+          <hr>
+          <p><strong>Depósito actual:</strong> $${depositoActual.toFixed(2)}</p>
+          <p><strong>Depósito nuevo:</strong> $${depositoNuevo.toFixed(2)}</p>
+          <p><strong>Diferencia de depósito:</strong> $${diferenciaDeposito.toFixed(2)}</p>
+          <hr>
+          <p><strong>Total a abonar:</strong> $${depositoNuevo.toFixed(2)} + $${diferenciaDeposito.toFixed(2)} = $${(diferenciaDeposito + alquilerNuevo).toFixed(2)}</p>
         `;
 
+    // Mostrar detalle directamente
+    detalleCalculoDiv.classList.remove("d-none");
+
     // Mostrar botones
-    verCalculoBtn.classList.remove("d-none");
     imagenBtn.classList.remove("d-none");
     whatsappBtn.classList.remove("d-none");
-    detalleCalculoDiv.classList.add("d-none");
 
     // Descargar como imagen
     imagenBtn.onclick = () => {
       const contenedor = document.getElementById("resultadoContainer");
+      const nombreArchivo = `${nombreInquilino.value} ${mesesNombres[mesFin - 1]}-${anioFin}`.replace(/[\s\/]+/g, "_");
       html2canvas(contenedor).then((canvas) => {
         const link = document.createElement("a");
-        link.download = "resultado.png";
+        link.download = `${nombreArchivo}.png`;
         link.href = canvas.toDataURL();
         link.click();
       });
     };
 
-    // Compartir en WhatsApp (si navegador soporta API)
     // Compartir en WhatsApp (imagen)
     whatsappBtn.onclick = () => {
       const contenedor = document.getElementById("resultadoContainer");
+      const nombreArchivo = `${nombreInquilino.value} ${mesesNombres[mesFin - 1]}-${anioFin}`.replace(/[\s\/]+/g, "_");
       html2canvas(contenedor).then((canvas) => {
         canvas.toBlob((blob) => {
-          const file = new File([blob], "resultado.png", { type: "image/png" });
+          const file = new File([blob], `${nombreArchivo}.png`, { type: "image/png" });
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator
               .share({
@@ -121,13 +147,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     };
-  });
-
-  // Toggle detalle
-  verCalculoBtn.addEventListener("click", () => {
-    detalleCalculoDiv.classList.toggle("d-none");
-    verCalculoBtn.textContent = detalleCalculoDiv.classList.contains("d-none")
-      ? "Ver cálculo"
-      : "Ocultar cálculo";
   });
 });
