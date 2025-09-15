@@ -18,6 +18,17 @@
             <div class="card-body p-4">
               <h3 class="text-center mb-4 fw-bold">Calculadora de Alquiler</h3>
 
+              <!-- Nombre del inquilino -->
+              <div class="mb-3">
+                <label for="inquilinoNombre" class="form-label">Nombre del inquilino</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="inquilinoNombre"
+                  placeholder="Ej: Juan Pérez"
+                />
+              </div>
+
               <!-- Alquiler actual -->
               <div class="mb-3">
                 <label for="alquilerActual" class="form-label"
@@ -60,6 +71,58 @@
                 </select>
               </div>
 
+              <!-- Mes y año inicial -->
+              <div class="mb-3 row">
+                <div class="col">
+                  <label for="mesInicial" class="form-label">Mes inicial</label>
+                  <select class="form-select form-select-lg" id="mesInicial">
+                    <option value="" selected disabled>Mes...</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="anioInicial" class="form-label">Año inicial</label>
+                  <input type="number" class="form-control form-control-lg" id="anioInicial" min="2000" max="2100" value="2025"/>
+                </div>
+              </div>
+
+              <!-- Mes y año final -->
+              <div class="mb-3 row">
+                <div class="col">
+                  <label for="mesFinal" class="form-label">Mes final</label>
+                  <select class="form-select form-select-lg" id="mesFinal">
+                    <option value="" selected disabled>Mes...</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="anioFinal" class="form-label">Año final</label>
+                  <input type="number" class="form-control form-control-lg" id="anioFinal" min="2000" max="2100" value="2025"/>
+                </div>
+              </div>
+
               <!-- Botón calcular -->
               <div class="d-grid my-5">
                 <button
@@ -72,9 +135,6 @@
 
               <!-- Botones secundarios -->
               <div class="d-flex justify-content-between mt-2 flex-wrap gap-2">
-                <button class="btn btn-dark btn-sm d-none" id="verCalculoBtn">
-                  Ver cálculo
-                </button>
                 <button
                   class="btn btn-outline-primary btn-sm d-none"
                   id="imagenBtn"
@@ -86,15 +146,8 @@
                 </button>
               </div>
 
-              <!-- Detalle -->
               <!-- Contenedor de solo resultados -->
               <div id="resultadoContainer">
-                <!-- Resultado resumido -->
-                <div
-                  id="resultado"
-                  class="alert alert-info mt-4 d-none rounded-3"
-                ></div>
-
                 <!-- Detalle -->
                 <div
                   id="detalleCalculo"
