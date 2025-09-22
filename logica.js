@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Depósito nuevo:</strong> $${depositoNuevo.toFixed(2)}</p>
           <p><strong>Diferencia de depósito:</strong> $${diferenciaDeposito.toFixed(2)}</p>
           <hr>
-          <p><strong>Total a abonar:</strong> $${depositoNuevo.toFixed(2)} + $${diferenciaDeposito.toFixed(2)} = $${(diferenciaDeposito + alquilerNuevo).toFixed(2)}</p>
+          <p><strong>Total a abonar:</strong> $${alquilerNuevo.toFixed(2)} + $${diferenciaDeposito.toFixed(2)} = $${(diferenciaDeposito + alquilerNuevo).toFixed(2)}</p>
         `;
 
     // Mostrar detalle directamente
@@ -149,3 +149,4 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   });
 });
+
